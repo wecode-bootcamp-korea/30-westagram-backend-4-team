@@ -11,4 +11,4 @@ class User(models.Model):
     updated_at   = models.DateTimeField(auto_now=True, null=True)
     
     class Meta:
-        db_table = "userinfos"
+        db_table = "members"
