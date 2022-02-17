@@ -6,7 +6,7 @@ class User(models.Model):
     second_name       = models.CharField(max_length=20 )
     email             = models.CharField(max_length=100)
     password          = models.CharField(max_length=50)
-    phone_number      = models.IntegerField( )
+    phone_number      = models.CharField(max_length=12)
     extra_information = models.TextField( blank=True, null=True)
     
     class Meta:
