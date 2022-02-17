@@ -1,0 +1,21 @@
+brotlipy==0.7.0
+certifi==2021.10.8
+cffi @ file:///tmp/build/80754af9/cffi_1625814692085/work
+chardet @ file:///tmp/build/80754af9/chardet_1607706775000/work
+conda==4.11.0
+conda-package-handling @ file:///tmp/build/80754af9/conda-package-handling_1618262147379/work
+cryptography @ file:///tmp/build/80754af9/cryptography_1616767007030/work
+et-xmlfile==1.1.0
+idna @ file:///home/linux1/recipes/ci/idna_1610986105248/work
+jdcal==1.4.1
+olefile==0.46
+openpyxl==3.0.9
+Pillow==9.0.1
+pycosat==0.6.3
+pycparser @ file:///tmp/build/80754af9/pycparser_1594388511720/work
+pyOpenSSL @ file:///tmp/build/80754af9/pyopenssl_1608057966937/work
+PySocks @ file:///tmp/build/80754af9/pysocks_1605305812635/work
+requests @ file:///tmp/build/80754af9/requests_1608241421344/work
+ruamel-yaml-conda @ file:///tmp/build/80754af9/ruamel_yaml_1616016711199/work
+six @ file:///tmp/build/80754af9/six_1623709665295/work
+tqdm @ file:///tmp/build/80754af9/tqdm_1625563689033/work
