@@ -1,0 +1,6 @@
+Django==4.0.2
+django-cors-headers==3.11.0
+mysqlclient==2.1.0
+
+# MacBook M1 additional setting
+PyMySQL==1.0.2
