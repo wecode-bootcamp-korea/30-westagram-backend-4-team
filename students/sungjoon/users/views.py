@@ -11,7 +11,7 @@ class UserView(View):
     def post(self, request):
         data = json.loads(request.body)
 
-        email = data['email']
+        email    = data['email']
         password = data['password']
 
         try:
