@@ -5,28 +5,32 @@ from django.http  import JsonResponse
 from django.views import View
 
 from users.models import User
+from users.validations import verify_email, verify_password
 
 class UserView(View):
     def post(self, request):
         data = json.loads(request.body)
 
-        email_regex    = re.match('^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9.]+$', data['email'])
-        password_regex = re.match('^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]){8,}$', data['password'])
+        email = data['email']
+        password = data['password']
 
         try:
-            if not email_regex or password_regex:
-                return JsonResponse ({"message" : "FORBIDDEN"}, status=403)
+            if verify_email(email) is None:
+                return JsonResponse ({"message" : "INVALID_EMAIL"}, status=400)
+
+            if verify_password(password) is None:
+                return JsonResponse ({"message" : "INVALID_PASSWORD"}, status=400)
             
-            if User.objects.filter(email = data['email']).exists():
-                return JsonResponse ({"message" : "CONFLICT"}, status=409)
+            if User.objects.filter(email = email).exists():
+                return JsonResponse ({"message" : "EMAIL_OCCUPIED"}, status=409)
             
             User.objects.create(
                 username     = data['username'],
-                password     = data['password'],
                 first_name   = data['first_name'],
                 last_name    = data['last_name'],
-                email        = data['email'],
-                phone_number = data['phone_number']
+                phone_number = data['phone_number'],
+                password     = password,
+                email        = email                
             )
             
             return JsonResponse({"message" : "SUCCESS"}, status=201)
