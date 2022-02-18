@@ -23,7 +23,7 @@ class SignUpView(View):
                 return JsonResponse({'Message' : 'Invalid Password'},    status = 400)
             
             if User.objects.filter(email = email).exists():
-                return JsonResponse({'Message' : 'Email Already Exists '}, status = 400)
+                return JsonResponse({'Message' : 'Email Already Exists'}, status = 400)
 
             User.objects.create(
                 first_name   = data["first_name"],
