@@ -5,7 +5,7 @@ from django.http  import JsonResponse
 from django.views import View
 
 from users.models import User
-from users.validations import verify_email, verify_password
+from users.validations import validate_email, validate_password
 
 class UserView(View):
     def post(self, request):
@@ -15,10 +15,10 @@ class UserView(View):
         password = data['password']
 
         try:
-            if verify_email(email) is None:
+            if not validate_email(email):
                 return JsonResponse ({"message" : "INVALID_EMAIL"}, status=400)
 
-            if verify_password(password) is None:
+            if not validate_password(password):
                 return JsonResponse ({"message" : "INVALID_PASSWORD"}, status=400)
             
             if User.objects.filter(email = email).exists():
