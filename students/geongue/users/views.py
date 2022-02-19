@@ -1,11 +1,9 @@
-import email
+import json
+
 from django.views import View
 from django.http  import JsonResponse
 from .models      import User
-from .validations import *
-import json
-
-# Create your views here.
+from .validations import check_email, check_password
 
 class SignUpView(View):
 
@@ -47,10 +45,10 @@ class LogInView(View):
             data           = json.loads(request.body)
             login_email    = data['email']
             login_password = data['password']
-            email          = User.objects.filter(email = login_email)
-            password       = email[0].password
+            #email          = User.objects.filter(email = login_email)
+            #password       = email[0].password
 
-            if not email.exists() or login_password != password:
+            if not User.objects.filter(email = login_email, password = login_password).exists():
                 return JsonResponse({"message" : "INVALID_UESR"}, status = 401)
 
             return JsonResponse({"message" : "SUCCESS"}, status = 200)
