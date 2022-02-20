@@ -45,10 +45,10 @@ class LoginView(View):
             valid_email    = data['email']
             valid_password = data['password']
 
-            if not User.objects.filter(email=valid_email):
+            if not User.objects.filter(email = valid_email):
                 return JsonResponse({"message" : "INVALID_EMAIL"}, status = 401)
             
-            if not User.objects.filter(password=valid_password):
+            if not User.objects.filter(password = valid_password):
                 return JsonResponse({"message" : "INVALID_PASSWORD"}, status = 401)
 
             return JsonResponse({'MESSAGE' : 'SUCCESS'}, status=200)
