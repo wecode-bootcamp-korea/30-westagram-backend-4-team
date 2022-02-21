@@ -11,9 +11,9 @@ class SignUpView(View):
         try:
             data = json.loads(request.body)
 
-            email        = data['email']
-            password     = data['password']
-            phone_number = data['phone_number']
+            email           = data['email']
+            password        = data['password']
+            phone_number    = data['phone_number']
             secret_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
             if not validate_email(email):
