@@ -42,10 +42,10 @@ class LoginView(View):
     def post(self, request):
         try:
             data     = json.loads(request.body)
-            valid_email    = data['email']
-            valid_password = data['password']
+            email    = data['email']
+            password = data['password']
 
-            if not User.objects.filter(email = valid_email, password = valid_password).exists():
+            if not User.objects.filter(email = email, password = password).exists():
                 return JsonResponse({"message" : "INVALID_UESR"}, status = 401)
 
             return JsonResponse({'MESSAGE' : 'SUCCESS'}, status=200)
