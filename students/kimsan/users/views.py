@@ -17,11 +17,11 @@ class UserView(View):
             password     = data['password']
             phone_number = data['phone_number']
             
-            if validate_email(email)==False:
+            if not validate_email(email):
                 return JsonResponse({"message": "Invalid email form"}, status= 400)
-            if validate_phone_number(phone_number)==False:
+            if not validate_phone_number(phone_number):
                 return JsonResponse({"message": "Invalid phone number form"}, status= 400)
-            if validate_password(password)==False:
+            if not validate_password(password):
                 return JsonResponse({"message": "Invalid password form"}, status= 400)
 
             User.objects.create(
