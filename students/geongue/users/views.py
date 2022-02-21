@@ -9,13 +9,13 @@ class SignUpView(View):
 
     def post(self, request):
         try:
-            data       = json.loads(request.body)
-            first_name = data['first_name']
-            last_name  = data['last_name']
-            email      = data['email']
-            password   = data['password']
-            phone      = data['phone']
-            secret_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+            data                     = json.loads(request.body)
+            first_name               = data['first_name']
+            last_name                = data['last_name']
+            email                    = data['email']
+            password                 = data['password']
+            phone                    = data['phone']
+            secret_password          = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
             decoding_secret_password = secret_password.decode('utf-8')
 
             if check_email(email):
