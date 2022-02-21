@@ -14,9 +14,8 @@ class SignUpView(View):
             email           = data['email']
             password        = data['password']
             phone_number    = data['phone_number']
-            secret_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-            hassed_password = secret_password.decode('utf-8')
-
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+           
             if not validate_email(email):
                 return JsonResponse({'Message' : 'Invalid Email'}, status = 400)
             
@@ -30,7 +29,7 @@ class SignUpView(View):
                 first_name   = data["first_name"],
                 last_name    = data["last_name"],
                 email        = email,
-                password     = hassed_password,
+                password     = hashed_password,
                 phone_number = phone_number,
                 
             )
