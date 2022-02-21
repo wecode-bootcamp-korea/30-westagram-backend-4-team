@@ -45,7 +45,6 @@ class LoginView(View):
             data     = json.loads(request.body)
             email    = data['email']
             password = data['password']
-            print(User.objects.filter(email=email).values())
             if not User.objects.filter(email = email, password = password).exists():
                 return JsonResponse({"message" : "INVALID_UESR"}, status = 401)
                 
