@@ -6,6 +6,7 @@ from django.http     import JsonResponse
 from django.db.utils import IntegrityError
 from .models         import User
 from .validation     import validate_email,validate_phone_number,validate_password
+import bcrypt
 
 class SignUpView(View):
     def post(self,request):
@@ -23,12 +24,14 @@ class SignUpView(View):
                 return JsonResponse({"message": "Invalid phone number form"}, status= 400)
             if not validate_password(password):
                 return JsonResponse({"message": "Invalid password form"}, status= 400)
+            
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode()
 
             User.objects.create(
                 first_name=first_name, 
                 second_name=second_name, 
                 email=email, 
-                password=password ,
+                password=hashed_password ,
                 phone_number=phone_number)   
 
             return JsonResponse({'message' : 'SUCCESS'}, status = 201)
