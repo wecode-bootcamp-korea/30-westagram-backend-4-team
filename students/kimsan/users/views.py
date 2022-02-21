@@ -5,7 +5,7 @@ from django.views    import View
 from django.http     import JsonResponse
 from django.db.utils import IntegrityError
 from .models         import User
-from .validation     import validate_email,validate_phone_number,validate_password
+from .validation     import validate_email, validate_password
 
 
 class SignUpView(View):
@@ -16,16 +16,13 @@ class SignUpView(View):
             second_name  = data['second_name']
             email        = data['email']
             password     = data['password']
-            phone_number = ''
+            phone_number = data.get('phone_number')
             
             
             if not validate_email(email):
                 return JsonResponse({"message": "Invalid email form"}, status= 400)
             if not validate_password(password):
                 return JsonResponse({"message": "Invalid password form"}, status= 400)
-            if data.get('phone_number'):
-                if not validate_phone_number(data['phone_number']):
-                    return JsonResponse({"message": "Invalid phone number form"}, status= 400)
             
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode()
 
