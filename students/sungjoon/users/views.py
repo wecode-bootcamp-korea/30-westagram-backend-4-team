@@ -1,5 +1,4 @@
 import json
-import re
 
 from django.http  import JsonResponse
 from django.views import View
@@ -29,7 +28,7 @@ class SignUpView(View):
                 first_name   = data['first_name'],
                 last_name    = data['last_name'],
                 phone_number = data['phone_number'],
-                password     = password,
+                password     = data['password'],
                 email        = email                
             )
             
