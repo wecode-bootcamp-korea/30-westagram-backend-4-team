@@ -7,7 +7,7 @@ from django.db.utils import IntegrityError
 from .models         import User
 from .validation     import validate_email,validate_phone_number,validate_password
 
-class UserView(View):
+class SignUpView(View):
     def post(self,request):
         try:
             data         = json.loads(request.body)
