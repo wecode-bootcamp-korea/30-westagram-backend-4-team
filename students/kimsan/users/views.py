@@ -24,7 +24,6 @@ class SignUpView(View):
             if not validate_password(password):
                 return JsonResponse({"message": "Invalid password form"}, status= 400)
            
-
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode()
 
             User.objects.create(
