@@ -2,10 +2,11 @@ import json, bcrypt, jwt
 from django.views         import View
 from django.http          import JsonResponse
 from django.db.utils      import IntegrityError
+from django.core.exceptions import MultipleObjectsReturned
 from .models              import User
 from .validation          import validate_email, validate_password
-from  westagram.settings  import SECRET_KEY
-from  westagram.settings  import ALGORITHM
+from  westagram.settings  import SECRET_KEY, ALGORITHM
+
 
 class SignUpView(View):
     def post(self,request):
@@ -43,15 +44,15 @@ class LoginView(View):
     def post(self,request):
         try:    
             data         = json.loads(request.body)
-            new_email    = data['email']
-            new_password = data['password']
+            email    = data['email']
+            password = data['password']
 
-            if not User.objects.filter(email = new_email).exists():
+            if not User.objects.filter(email = email).exists():
                 return JsonResponse({"message" : "INVALID_UESR"}, status = 401)
 
-            user=User.objects.get(email=new_email)
+            user=User.objects.get(email=email)
 
-            if not bcrypt.checkpw(new_password.encode('utf-8'),user.password.encode('utf-8')):
+            if not bcrypt.checkpw(password.encode('utf-8'),user.password.encode('utf-8')):
                 return JsonResponse({"message" : "INVALID_UESR"}, status = 401)
 
             access_token = jwt.encode({'id' : user.id}, SECRET_KEY, ALGORITHM)
@@ -59,4 +60,6 @@ class LoginView(View):
     
         except KeyError:
             return JsonResponse({"message": "KEY_ERROR"}, status = 400)
-            
+        
+        except MultipleObjectsReturned:
+             return JsonResponse({"message": "MultipleObjectsReturned"}, status = 400)
