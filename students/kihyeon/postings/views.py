@@ -4,7 +4,7 @@ from django.views import View
 from django.http  import JsonResponse
 
 from users.models     import User
-from .models          import Post, Comment
+from .models          import Post, Comment, Like
 from secret           import ALGORITHM
 from config.settings  import SECRET_KEY
 
@@ -56,8 +56,10 @@ class CommentView(View):
         try:
             data = json.loads(request.body)
             comment = data['comment']
-            user_id    = data['user_id']
             post_id = data['post_id']
+            payload = jwt.decode(data["token"], SECRET_KEY, ALGORITHM)
+            user_id = payload['user_id']
+
 
             if not User.objects.filter(id = user_id).exists():
                 return JsonResponse({'MESSAGE': "User Does Not Exist"}, status=404)
@@ -67,7 +69,7 @@ class CommentView(View):
             
             Comment.objects.create(
                 comment = comment,
-                user_id = user_id,
+                user_id = payload['user_id'],
                 post_id = post_id,
             )
 
@@ -93,3 +95,30 @@ class CommentView(View):
                 }
             )
         return JsonResponse({"postings" : results}, status = 200)
+    
+class LikeView(View):
+    def post(self, request):
+        try:        
+            data = json.loads(request.body)
+            post_id    = data['post_id'] 
+            payload = jwt.decode(data["token"], SECRET_KEY, ALGORITHM)
+            user_id    = payload['user_id']
+
+            if not User.objects.filter(id = user_id).exists():
+                return JsonResponse({'MESSAGE': "User Does Not Exist"}, status=404)    
+            
+            if not User.objects.filter(id = post_id).exists():
+                return JsonResponse({'MESSAGE': "Post Does Not Exist"}, status=404)    
+            
+            if Like.objects.filter(user = user_id, post=post_id).exists():
+                return JsonResponse({'MESSAGE': "Already Liked Post"}, status=404)    
+            
+            Comment.objects.create(
+                user_id = payload['user_id'],
+                post_id = post_id,
+            )
+            return JsonResponse({'messasge':'SUCCESS'}, status=201) 
+
+        except KeyError:
+            return JsonResponse({"MESSAGE": "KEY_ERROR"}, status=400)
+        

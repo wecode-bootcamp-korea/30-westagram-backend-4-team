@@ -24,3 +24,10 @@ class Comment(TimeStampedModel):
     
     class Meta:
         db_table = "comments"
+        
+class Like(TimeStampedModel):
+    user = models.ForeignKey('users.User', related_name='likes', on_delete=models.PROTECT) 
+    post = models.ForeignKey('Post', related_name='likes', on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = "likes"
