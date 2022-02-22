@@ -8,6 +8,7 @@ django = "*"
 django-cors-headers = "*"
 mysqlclient = "*"
 httpie = "*"
+bcrypt = "*"
 
 [dev-packages]
 
