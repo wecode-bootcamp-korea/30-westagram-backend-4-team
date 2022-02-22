@@ -1,4 +1,4 @@
-import json
+import json, bcrypt
 
 from django.http  import JsonResponse
 from django.views import View
@@ -11,8 +11,12 @@ class SignUpView(View):
         try:
             data = json.loads(request.body)
 
-            email    = data['email']
-            password = data['password']
+            username     = data['username']
+            first_name   = data['first_name']
+            last_name    = data['last_name']
+            phone_number = data.get('phone_number', '')
+            email        = data['email'] 
+            password     = data['password']
             
             if not validate_email(email):
                 return JsonResponse ({"message" : "INVALID_EMAIL"}, status=400)
@@ -23,13 +27,15 @@ class SignUpView(View):
             if User.objects.filter(email = email).exists():
                 return JsonResponse ({"message" : "EMAIL_OCCUPIED"}, status=409)
             
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            
             User.objects.create(
-                username     = data['username'],
-                first_name   = data['first_name'],
-                last_name    = data['last_name'],
-                phone_number = data['phone_number'],
-                password     = data['password'],
-                email        = email                
+                username     = username,
+                first_name   = first_name,
+                last_name    = last_name,
+                phone_number = phone_number,
+                email        = email,
+                password     = hashed_password                
             )
             
             return JsonResponse({"message" : "SUCCESS"}, status=201)
