@@ -6,8 +6,8 @@ class User(models.Model):
     second_name       = models.CharField(max_length=20)
     email             = models.CharField(max_length=100, unique=True)
     password          = models.CharField(max_length=255)
-    phone_number      = models.CharField(max_length=20, blank=True, null=True)
-    extra_information = models.TextField(blank=True, null=True)
+    phone_number      = models.CharField(max_length=20, blank=True)
+    extra_information = models.TextField(blank=True)
     created_at        = models.DateTimeField(auto_now_add=True)
     updated_at        = models.DateTimeField(auto_now=True)
     

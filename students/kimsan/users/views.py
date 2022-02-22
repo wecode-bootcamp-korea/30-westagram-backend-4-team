@@ -23,7 +23,8 @@ class SignUpView(View):
                 return JsonResponse({"message": "Invalid email form"}, status= 400)
             if not validate_password(password):
                 return JsonResponse({"message": "Invalid password form"}, status= 400)
-            
+            if not phone_number:
+                phone_number=''
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode()
 
             User.objects.create(
@@ -47,6 +48,7 @@ class LoginView(View):
             data     = json.loads(request.body)
             email    = data['email']
             password = data['password']
+
             if not User.objects.filter(email = email, password = password).exists():
                 return JsonResponse({"message" : "INVALID_UESR"}, status = 401)
                 
