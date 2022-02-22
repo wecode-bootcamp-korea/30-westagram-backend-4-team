@@ -48,9 +48,7 @@ class LogInView(View):
             login_email    = data['email']
             login_password = data['password']
             users          = User.objects.get(email = login_email)
-            SECRET         = SECRET_KEY
-            ALGORITHM      = algorithm
-            access_token   = jwt.encode({'user_id' : users.id}, SECRET, ALGORITHM)
+            access_token   = jwt.encode({'user_id' : users.id}, SECRET_KEY, algorithm)
 
             if not User.objects.filter(email = login_email).exists():
                 return JsonResponse({"message" : "INVALID_UESR"}, status = 401)
