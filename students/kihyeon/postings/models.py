@@ -16,3 +16,11 @@ class Post(TimeStampedModel):
     
     class Meta:
         db_table = "postings"
+
+class Comment(TimeStampedModel):
+    comment = models.CharField(max_length=300)
+    user    = models.ForeignKey('users.User', related_name='comments', on_delete=models.PROTECT) 
+    post    = models.ForeignKey('Post', related_name='comments', on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = "comments"
