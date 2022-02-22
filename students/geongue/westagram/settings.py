@@ -16,6 +16,7 @@ import pymysql
 
 pymysql.install_as_MySQLdb()
 
+algorithm = "HS256"
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
