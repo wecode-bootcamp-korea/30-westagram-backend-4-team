@@ -1,11 +1,13 @@
 import json, bcrypt, jwt
-from django.views         import View
-from django.http          import JsonResponse
-from django.db.utils      import IntegrityError
+
+from django.views           import View
+from django.http            import JsonResponse
+from django.db.utils        import IntegrityError
 from django.core.exceptions import MultipleObjectsReturned
-from .models              import User
-from .validation          import validate_email, validate_password
-from  westagram.settings  import SECRET_KEY, ALGORITHM
+
+from .models                import User
+from .validation            import validate_email, validate_password
+from  westagram.settings    import SECRET_KEY, ALGORITHM
 
 
 class SignUpView(View):
