@@ -52,11 +52,10 @@ class LoginView(View):
                 return JsonResponse({"message" : "WRONG_PASSWORD"}, status = 401)
 
             access_token = jwt.encode({'id' : user.id}, SECRET_KEY, ALGORITHM)
-            return JsonResponse({"message" : "LOGIN_SUCCESS! JWT: " + access_token}, status = 201)
+            return JsonResponse({"message" : "LOGIN_SUCCESS!", "token" : access_token}, status = 201)
             
         except KeyError:
             return JsonResponse({"message": "KEY_ERROR"}, status=400)
         
         except User.DoesNotExist:
             return JsonResponse({"message" : "INVALID_EMAIL"}, status = 401)
-
