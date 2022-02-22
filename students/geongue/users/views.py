@@ -1,4 +1,4 @@
-import json
+import json, bcrypt
 
 from django.views import View
 from django.http  import JsonResponse
@@ -9,12 +9,13 @@ class SignUpView(View):
 
     def post(self, request):
         try:
-            data       = json.loads(request.body)
-            first_name = data['first_name']
-            last_name  = data['last_name']
-            email      = data['email']
-            password   = data['password']
-            phone      = data['phone']
+            data                     = json.loads(request.body)
+            first_name               = data['first_name']
+            last_name                = data['last_name']
+            email                    = data['email']
+            password                 = data['password']
+            phone                    = data.get('phone', '')
+            hashed_password          = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
             if check_email(email):
                 return JsonResponse({"message" : "Check the email-form"}, status = 400)
@@ -29,7 +30,7 @@ class SignUpView(View):
                         first_name = first_name,
                         last_name  = last_name,
                         email      = email,
-                        password   = password,
+                        password   = hashed_password,
                         phone      = phone
             )
             
