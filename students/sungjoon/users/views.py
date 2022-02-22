@@ -14,7 +14,7 @@ class SignUpView(View):
             username     = data['username']
             first_name   = data['first_name']
             last_name    = data['last_name']
-            phone_number = data['phone_number']
+            phone_number = data.get('phone_number', None)
             email        = data['email']
             password     = data['password']
             
@@ -27,7 +27,7 @@ class SignUpView(View):
             if User.objects.filter(email = email).exists():
                 return JsonResponse ({"message" : "EMAIL_OCCUPIED"}, status=409)
             
-            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             
             User.objects.create(
                 username     = username,
