@@ -1,10 +1,10 @@
 import json, bcrypt, jwt
 
-from django.views import View
-from django.http  import JsonResponse
-from .models      import User
-from .validations import check_email, check_password
-from my_settings  import SECRET_KEY, ALGORITHM
+from django.views       import View
+from django.http        import JsonResponse
+from .models            import User
+from .validations       import check_email, check_password
+from westagram.settings import SECRET_KEY, ALGORITHM
 
 class SignUpView(View):
 
