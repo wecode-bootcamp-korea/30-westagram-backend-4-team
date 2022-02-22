@@ -14,9 +14,8 @@ class SignUpView(View):
             last_name                = data['last_name']
             email                    = data['email']
             password                 = data['password']
-            phone                    = data['phone']
-            hashed_password          = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-            decoding_hashed_password = hashed_password.decode('utf-8')
+            phone                    = data.get('phone', None)
+            hashed_password          = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
             if check_email(email):
                 return JsonResponse({"message" : "Check the email-form"}, status = 400)
@@ -31,7 +30,7 @@ class SignUpView(View):
                         first_name = first_name,
                         last_name  = last_name,
                         email      = email,
-                        password   = decoding_hashed_password,
+                        password   = hashed_password,
                         phone      = phone
             )
             
