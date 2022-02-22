@@ -15,7 +15,7 @@ class SignUpView(View):
             first_name   = data['first_name']
             last_name    = data['last_name']
             phone_number = data.get('phone_number', None)
-            email        = data['email']
+            email        = data['email'] 
             password     = data['password']
             
             if not validate_email(email):
