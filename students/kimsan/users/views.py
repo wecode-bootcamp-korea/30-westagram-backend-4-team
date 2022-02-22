@@ -25,6 +25,7 @@ class SignUpView(View):
                 return JsonResponse({"message": "Invalid password form"}, status= 400)
             if not phone_number:
                 phone_number=''
+                
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode()
 
             User.objects.create(
