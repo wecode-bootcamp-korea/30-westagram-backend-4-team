@@ -14,7 +14,7 @@ class SignUpView(View):
             username     = data['username']
             first_name   = data['first_name']
             last_name    = data['last_name']
-            phone_number = data.get('phone_number', None)
+            phone_number = data.get('phone_number', '')
             email        = data['email'] 
             password     = data['password']
             
