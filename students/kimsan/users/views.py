@@ -16,16 +16,15 @@ class SignUpView(View):
             second_name  = data['second_name']
             email        = data['email']
             password     = data['password']
-            phone_number = data.get('phone_number')
+            phone_number = data.get('phone_number','')
             
             
             if not validate_email(email):
                 return JsonResponse({"message": "Invalid email form"}, status= 400)
             if not validate_password(password):
                 return JsonResponse({"message": "Invalid password form"}, status= 400)
-            if not phone_number:
-                phone_number=''
-                
+           
+
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode()
 
             User.objects.create(
