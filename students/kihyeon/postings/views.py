@@ -11,10 +11,10 @@ from config.settings  import SECRET_KEY
 class PostingView(View):
     def post(self, request):
         try:
-            data = json.loads(request.body)
+            data         = json.loads(request.body)
             post_title   = data["post_title"]
             post_content = data["post_content"]
-            payload = jwt.decode(data["token"], SECRET_KEY, ALGORITHM)
+            payload      = jwt.decode(data["token"], SECRET_KEY, ALGORITHM)
 
             Post.objects.create(
                 post_title   = post_title,
@@ -29,7 +29,7 @@ class PostingView(View):
             return JsonResponse({"MESSAGE": "KEY_ERROR"}, status=400)
 
     def get(self, request):
-        posts = Post.objects.all()
+        posts   = Post.objects.all()
         results = []
         
         for post in posts:
@@ -54,7 +54,7 @@ class PostingView(View):
 class CommentView(View):
     def post(self, request):
         try:
-            data = json.loads(request.body)
+            data    = json.loads(request.body)
             comment = data['comment']
             post_id = data['post_id']
             payload = jwt.decode(data["token"], SECRET_KEY, ALGORITHM)
@@ -99,10 +99,10 @@ class CommentView(View):
 class LikeView(View):
     def post(self, request):
         try:        
-            data = json.loads(request.body)
-            post_id    = data['post_id'] 
+            data    = json.loads(request.body)
+            post_id = data['post_id'] 
             payload = jwt.decode(data["token"], SECRET_KEY, ALGORITHM)
-            user_id    = payload['user_id']
+            user_id = payload['user_id']
 
             if not User.objects.filter(id = user_id).exists():
                 return JsonResponse({'MESSAGE': "User Does Not Exist"}, status=404)    
@@ -113,7 +113,7 @@ class LikeView(View):
             if Like.objects.filter(user = user_id, post=post_id).exists():
                 return JsonResponse({'MESSAGE': "Already Liked Post"}, status=404)    
             
-            Comment.objects.create(
+            Like.objects.create(
                 user_id = payload['user_id'],
                 post_id = post_id,
             )

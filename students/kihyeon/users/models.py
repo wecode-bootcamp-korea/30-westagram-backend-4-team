@@ -12,3 +12,11 @@ class User(models.Model):
     
     class Meta:
         db_table = "users"
+        
+
+class Follow(models.Model):
+    following_user = models.ForeignKey('User', related_name='followings', on_delete=models.CASCADE) 
+    followed_user  =  models.ForeignKey('User', related_name='followed', on_delete=models.CASCADE) 
+    
+    class Meta:
+        db_table = "follows"
