@@ -62,31 +62,37 @@ class LoginView(View):
 
 class FollowView(View):
     def post(self, request):
+        data = json.loads(request.body)
+        token   = request.headers.get("Authorization")
+        payload = jwt.decode(token, SECRET_KEY, ALGORITHM)
+        
         try:
-            data    = json.loads(request.body)
-            data2   = request.headers
-            token = data2.headers.get("Authorization")
-            # payload = jwt.decode(data["token"], SECRET_KEY, ALGORITHM)
-            payload = jwt.decode(token, SECRET_KEY, ALGORITHM)
-            followed_user = data['followed_user'] 
-            following_user = payload['following_user'] 
-            
-            get_follow = Follow.objects.get(following_user_id = following_user)
-            get_folloed = Follow.objects.get(following_user_id = following_user)
+            followeduser = data['followeduser_id']
+            followuser = payload['user_id']
 
-            if get_follow.id == get_folloed.id:
-                get_follow.delete()
-                return JsonResponse({"message" : "DELETED_FOLLOWING"}, status = 201)
-            
-            if followed_user == '' or following_user == '':
-                return JsonResponse({"message" : "Please Type User ID"}, status = 400)
-            
-            Follow.objects.create(
-                following_user = User.objects.get(id=following_user),
-                followed_user = User.objects.get(id=followed_user),
-            )
-            return JsonResponse({"message" : "SUCCESS"}, status = 201)
+            try:
+                get_follow    = Follow.objects.get(followeduser_id = followeduser)
+                get_following = Follow.objects.get(followuser_id = followuser)
+
+                if get_follow.id == get_following.id:
+                    get_follow.delete()
+                    return JsonResponse({"message" : "delete LIKE SUCCESS"}, status = 201)
+            except:
+                pass
+
+            if followeduser == '' and followuser == '':
+                return JsonResponse({"message" : "Please type id"}, status = 400)
+
+            if Follow.objects.filter(followuser_id = followuser, followeduser_id = followeduser).exists():
+                return JsonResponse({'message' : 'You have already followed'},status=401) 
+      
+            else:
+                Follow.objects.create(
+                    followuser_id   = payload['user_id'],
+                    followeduser_id = followeduser,
+                )
+                return JsonResponse({"message" : "SUCCESS"}, status = 201)       
+
 
         except KeyError:
-            return JsonResponse({"message": "KEY_ERROR"}, status=400)
-        
+            return JsonResponse({'message' : 'KEY_ERROR'},status=400)
