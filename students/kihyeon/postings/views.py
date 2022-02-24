@@ -125,3 +125,15 @@ class LikeView(View):
         except KeyError:
             return JsonResponse({"MESSAGE": "KEY_ERROR"}, status=400)
         
+    def get(self, request):
+        likes = Like.objects.all()
+        results = []
+
+        for like in likes:
+            results.append(
+                {
+                "post_id" : like.post_id,
+                "user_id" : like.user_id,
+                }
+            )
+        return JsonResponse({"postings" : results}, status = 200)
