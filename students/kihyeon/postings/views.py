@@ -14,7 +14,8 @@ class PostingView(View):
             data         = json.loads(request.body)
             post_title   = data["post_title"]
             post_content = data["post_content"]
-            payload      = jwt.decode(data["token"], SECRET_KEY, ALGORITHM)
+            token        = request.headers.get("Authorization")
+            payload      = jwt.decode(token, SECRET_KEY, ALGORITHM)
 
             Post.objects.create(
                 post_title   = post_title,
@@ -57,7 +58,8 @@ class CommentView(View):
             data    = json.loads(request.body)
             comment = data['comment']
             post_id = data['post_id']
-            payload = jwt.decode(data["token"], SECRET_KEY, ALGORITHM)
+            token   = request.headers.get("Authorization")
+            payload = jwt.decode(token, SECRET_KEY, ALGORITHM)
             user_id = payload['user_id']
 
 
@@ -101,7 +103,8 @@ class LikeView(View):
         try:        
             data    = json.loads(request.body)
             post_id = data['post_id'] 
-            payload = jwt.decode(data["token"], SECRET_KEY, ALGORITHM)
+            token   = request.headers.get("Authorization")
+            payload = jwt.decode(token, SECRET_KEY, ALGORITHM)
             user_id = payload['user_id']
 
             if not User.objects.filter(id = user_id).exists():

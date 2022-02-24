@@ -64,7 +64,10 @@ class FollowView(View):
     def post(self, request):
         try:
             data    = json.loads(request.body)
-            payload = jwt.decode(data["token"], SECRET_KEY, ALGORITHM)
+            data2   = request.headers
+            token = data2.headers.get("Authorization")
+            # payload = jwt.decode(data["token"], SECRET_KEY, ALGORITHM)
+            payload = jwt.decode(token, SECRET_KEY, ALGORITHM)
             followed_user = data['followed_user'] 
             following_user = payload['following_user'] 
             
