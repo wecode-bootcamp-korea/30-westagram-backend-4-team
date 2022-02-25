@@ -5,23 +5,23 @@ from django.http  import JsonResponse
 
 from users.models     import User
 from .models          import Post, Comment, Like
-from secret           import ALGORITHM
-from config.settings  import SECRET_KEY
+from users.utils      import login_decorator
 
 class PostingView(View):
+    @login_decorator
     def post(self, request):
         try:
             data         = json.loads(request.body)
             post_title   = data["post_title"]
             post_content = data["post_content"]
-            token        = request.headers.get("Authorization")
-            payload      = jwt.decode(token, SECRET_KEY, ALGORITHM)
-
+            user         = request.user
+            
             Post.objects.create(
                 post_title   = post_title,
                 post_content = post_content,
                 image_url    = data["image_url"],
-                user_id      = payload['user_id'],
+                user_id      = user.id
+                # user       = user
             )
 
             return JsonResponse({"MESSAGE": "Post created!"}, status=201)
@@ -53,17 +53,16 @@ class PostingView(View):
         return JsonResponse({"postings" : results}, status = 200)
 
 class CommentView(View):
+    @login_decorator
     def post(self, request):
         try:
             data    = json.loads(request.body)
             comment = data['comment']
             post_id = data['post_id']
-            token   = request.headers.get("Authorization")
-            payload = jwt.decode(token, SECRET_KEY, ALGORITHM)
-            user_id = payload['user_id']
+            user    = request.user
 
 
-            if not User.objects.filter(id = user_id).exists():
+            if not User.objects.filter(id = user.id).exists():
                 return JsonResponse({'MESSAGE': "User Does Not Exist"}, status=404)
 
             if not Post.objects.filter(id = post_id).exists(): 
@@ -71,11 +70,11 @@ class CommentView(View):
             
             Comment.objects.create(
                 comment = comment,
-                user_id = payload['user_id'],
+                user_id = user.id,
                 post_id = post_id,
             )
 
-            return JsonResponse({"MESSAGE": "Post created!"}, status=201)
+            return JsonResponse({"MESSAGE": "Comment created!"}, status=201)
    
         except KeyError:
             return JsonResponse({"MESSAGE": "KEY_ERROR"}, status=400)
@@ -99,25 +98,26 @@ class CommentView(View):
         return JsonResponse({"postings" : results}, status = 200)
     
 class LikeView(View):
+    @login_decorator
     def post(self, request):
         try:        
             data    = json.loads(request.body)
             post_id = data['post_id'] 
-            token   = request.headers.get("Authorization")
-            payload = jwt.decode(token, SECRET_KEY, ALGORITHM)
-            user_id = payload['user_id']
+            user    = request.user
 
-            if not User.objects.filter(id = user_id).exists():
+            if not User.objects.filter(id = user.id).exists():
                 return JsonResponse({'MESSAGE': "User Does Not Exist"}, status=404)    
             
-            if not User.objects.filter(id = post_id).exists():
+            if not Post.objects.filter(id = post_id).exists():
+                #if not Post.objects.filter(post_id = post_id).exists(): 왜 안될까?
                 return JsonResponse({'MESSAGE': "Post Does Not Exist"}, status=404)    
             
-            if Like.objects.filter(user = user_id, post=post_id).exists():
+            if Like.objects.filter(user = user.id, post=post_id).exists():
                 return JsonResponse({'MESSAGE': "Already Liked Post"}, status=404)    
             
+
             Like.objects.create(
-                user_id = payload['user_id'],
+                user_id = user.id,
                 post_id = post_id,
             )
             return JsonResponse({'messasge':'SUCCESS'}, status=201) 

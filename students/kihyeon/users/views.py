@@ -7,6 +7,7 @@ from users.models     import User, Follow
 from users.validators import validate_email, validate_password
 from secret           import ALGORITHM
 from config.settings  import SECRET_KEY
+from users.utils      import login_decorator
 
 class SignUpView(View):
     def post(self, request):
@@ -61,14 +62,14 @@ class LoginView(View):
             return JsonResponse({"message" : "INVALID_EMAIL"}, status = 401)
 
 class FollowView(View):
+    @login_decorator
     def post(self, request):
         data = json.loads(request.body)
-        token   = request.headers.get("Authorization")
-        payload = jwt.decode(token, SECRET_KEY, ALGORITHM)
-        
+        user = request.user
+
         try:
             followeduser = data['followeduser_id']
-            followuser = payload['user_id']
+            followuser = user
 
             try:
                 get_follow    = Follow.objects.get(followeduser_id = followeduser)
@@ -88,7 +89,7 @@ class FollowView(View):
       
             else:
                 Follow.objects.create(
-                    followuser_id   = payload['user_id'],
+                    followuser   = followuser,
                     followeduser_id = followeduser,
                 )
                 return JsonResponse({"message" : "SUCCESS"}, status = 201)       
