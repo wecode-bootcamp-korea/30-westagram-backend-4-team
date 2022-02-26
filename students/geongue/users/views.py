@@ -52,7 +52,8 @@ class LogInView(View):
                 return JsonResponse({"message" : "INVALID_UESR"}, status = 401)
 
             user         = User.objects.get(email = login_email)
-            access_token = jwt.encode({'user_id' : user.id}, SECRET_KEY, ALGORITHM)
+            access_token = jwt.encode({'user_id' : user.id}, SECRET_KEY, algorithm = ALGORITHM)
+            print(type(access_token))
             
             if not bcrypt.checkpw(login_password.encode('utf-8'), user.password.encode('utf-8')):
                 return JsonResponse({"message" : "Wrong password"}, status = 401)
