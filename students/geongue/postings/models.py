@@ -18,3 +18,11 @@ class Comment(models.Model):
 
     class Neta:
         db_table = 'comments'
+
+class Like(models.Model):
+    like_status = models.IntegerField(default=0)
+    post = models.ForeignKey('Post', on_delete=models.CASCADE)
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'likes'
